@@ -226,6 +226,6 @@ jobs:
         with: { name: reports-image-fixed, path: sbom-dl }
       - name: Cosign sign (keyless) + attest SBOM
         run: |
-          IMG=ghcr.io/${{ github.repository }}/lab-app@${{ steps.build.outputs.digest }}
+          IMG="ghcr.io/trandtb0991/devsecops/lab-app@${{ steps.build.outputs.digest }}"
           cosign sign --yes "$IMG"
           cosign attest --yes --type spdxjson --predicate sbom-dl/fixed/sbom.spdx.json "$IMG"
