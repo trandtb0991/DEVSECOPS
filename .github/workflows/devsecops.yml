@@ -55,6 +55,7 @@ jobs:
       - name: Semgrep
         run: |
           pip install -r gate/requirements.txt
+          python -m pip install "setuptools<82"
           mkdir -p reports/${{ matrix.target }}
           semgrep scan --config p/python --config p/flask --metrics=off --json \
             --output reports/${{ matrix.target }}/semgrep.json lab/${{ matrix.target }}/app
