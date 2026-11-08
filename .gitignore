@@ -1,0 +1,11 @@
+reports/
+gate-out/
+__pycache__/
+
+.terraform/
+*.tfstate
+*.tfstate.*
+*.tfvars
+*.tfvars.json
+.env
+.env.*
