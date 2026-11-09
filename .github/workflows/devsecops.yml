@@ -116,14 +116,29 @@ jobs:
       - uses: actions/checkout@v4
       - run: echo "T0=$(date +%s)" >> "$GITHUB_ENV"
       - name: Conftest
+        shell: bash
         run: |
+          set -euo pipefail
           mkdir -p reports/${{ matrix.target }}
-          curl -sSL https://github.com/open-policy-agent/conftest/releases/download/v0.56.0/conftest_0.56.0_Linux_x86_64.tar.gz | tar xz conftest
-          ./conftest test lab/${{ matrix.target }}/app/Dockerfile --parser dockerfile --policy policy \
-            --all-namespaces -o json > reports/${{ matrix.target }}/conftest.json || true
-      - name: Timing
-        if: always()
-        run: echo "{\"name\":\"policy\",\"seconds\":$(( $(date +%s) - T0 ))}" > reports/${{ matrix.target }}/timing-policy.json
+
+          RC=0
+          docker run --rm \
+            -v "$PWD:/project" \
+            -w /project \
+            openpolicyagent/conftest:v0.56.0 \
+            test lab/${{ matrix.target }}/app/Dockerfile \
+            --parser dockerfile \
+            --policy policy \
+            --all-namespaces \
+            -o json > reports/${{ matrix.target }}/conftest.json || RC=$?
+
+          if ! jq -e 'type == "array"' \
+            reports/${{ matrix.target }}/conftest.json >/dev/null; then
+            echo "ERROR: Conftest did not produce a valid JSON report"
+            exit 1
+          fi
+
+          echo "Conftest report generated (exit code: $RC)"
       - uses: actions/upload-artifact@v4
         if: always()
         with: { name: "reports-policy-${{ matrix.target }}", path: reports/ }
