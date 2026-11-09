@@ -1,4 +1,4 @@
-# Đề tài 21 - Đường ống DevSecOps phát hiện cấu hình sai và lỗ hổng trước triển khai
+# Đề tài 21 - Xây dựng đường ống DevSecOps phát hiện cấu hình sai và lỗ hổng trước triển khai
 
 Repo thực nghiệm gồm: ứng dụng Flask + Terraform mẫu (2 phiên bản `vulnerable` / `fixed`), pipeline GitHub Actions 6 lớp kiểm tra,
 security gate theo policy-as-code và cơ chế ngoại lệ có chủ sở hữu, thời hạn.
